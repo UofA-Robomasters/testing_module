@@ -38,6 +38,10 @@ class SerialDebugger:
         self.stopSendButton = Tkinter.Button(
                 self.msgFrame, text='Stop Sending', command=self.stop_send)
         self.stopSendButton.pack(side='left', padx=10, pady=5)
+        self.clearButton = Tkinter.Button(
+                self.top, text='Clear', command = self.clear_income_msg
+                )
+        self.clearButton.pack(side='left', padx=10, pady=5)
         self.incomeMsgText = Tkinter.Text(self.top, height=25, width=55)
         self.incomeMsgText.pack(side='top', padx=10, pady=5)
 
@@ -49,6 +53,9 @@ class SerialDebugger:
 
         self.top.protocol('WM_DELETE_WINDOW', self.on_closing)
         self.top.mainloop()
+
+    def clear_income_msg(self):
+        self.incomeMsgText.delete('1.0', Tkinter.END)
 
     def start_serial(self):
         bitrate = int(self.bitrateText.get('1.0', 'end-1c'))
@@ -69,7 +76,7 @@ class SerialDebugger:
         while self.receiving:
             msg = self.ser.read(1)
             if len(msg) == 1:
-                self.incomeMsgText.insert('1.0', str(ord(msg) + '\n'))
+                self.incomeMsgText.insert('1.0', str(bin(ord(msg))) + '\n')
         print 'Receiving stopped'
 
     def stop_serial(self):
@@ -87,7 +94,7 @@ class SerialDebugger:
         msg = self.sendMsgText.get('1.0', 'end-1c')
         if msg != '':
             msg = msg.strip().split()
-            msg = bytearray([int(x) for x in msg])
+            msg = bytearray([int(x,2) for x in msg])
             self.ser.write(msg)
             print 'Message sent'
 
@@ -95,7 +102,7 @@ class SerialDebugger:
         msg = self.sendMsgText.get('1.0', 'end-1c')
         if msg != '':
             msg = msg.strip().split()
-            msg = bytearray([int(x) for x in msg])
+            msg = bytearray([int(x,2) for x in msg])
             self.sendOnceButton['state'] = 'disabled'
             self.stopSendButton['state'] = 'normal'
             self.sendRepeatButton['state'] = 'disabled'
@@ -108,7 +115,7 @@ class SerialDebugger:
     def send_serial(self, msg):
         while self.sending:
             self.ser.write(msg)
-            print 'Message sent'
+            # print 'Message sent'
         print 'Repeated sending stopped'
 
     def stop_send(self):

@@ -3,7 +3,7 @@ import argparse
 import serial
 
 # Testing sending message
-MSG = [100, 9]
+MSG = [10]
 
 # These are predefined values for the communication protocol:
 MSG_START = 0xff
