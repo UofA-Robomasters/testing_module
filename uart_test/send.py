@@ -2,6 +2,9 @@ import sys
 import argparse
 import serial
 
+# Testing sending message
+MSG = [100, 9]
+
 # These are predefined values for the communication protocol:
 MSG_START = 0xff
 MSG_STOP = 0xfe
@@ -63,7 +66,7 @@ if __name__ == "__main__":
     Main function for testing
     """
     # message
-    message = [100,9]
+    message = MSG
     
     # parse user input
     # args = parse_user_input()
